@@ -23,14 +23,27 @@ namespace TaskFlowBackend.Repositories
             {
                 return await _context.Users
                     .FirstOrDefaultAsync(x =>
-                        x.UserName == query.UserName &&
-                        x.Password == query.Password &&
+                        x.UserName == query.username &&
+                        x.Password == query.password &&
                         x.IsDeleted == false &&
                         x.IsActive == true);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error While Logging");
+                return null;
+            }
+        }
+
+        public async Task<User?> GetUserDetailsByIdAsync(int userId)
+        {
+            try
+            {
+                return await _context.Users.FirstOrDefaultAsync(x => x.Id == Convert.ToInt32(userId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error While Fetching Details");
                 return null;
             }
         }

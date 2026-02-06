@@ -33,7 +33,8 @@ namespace TaskFlowBackend.Services
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, user.UserName == "admin" ? "Admin" : "User")
             };
 
             var key = new SymmetricSecurityKey(
@@ -53,12 +54,23 @@ namespace TaskFlowBackend.Services
             var userType = user.UserName == "admin" ? 1 : 2; 
             var result = new LoginResponseDto
             {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                UserType = userType.ToString(),
-                UserName = user.UserName,
-                StatusCode = 200,
+                token = new JwtSecurityTokenHandler().WriteToken(token),
+                usertype = userType,
+                username = user.UserName,
+                fullname = user.FullName,
+                statusCode = 200,
             };
             return result;
+
+        }
+        
+        public async Task<User?> GetUserDetailsById(int userId)
+        {
+            var userDetails = await _repo.GetUserDetailsByIdAsync(userId);
+
+            if (userDetails == null)
+                return null;
+            return userDetails;
 
         }
     }

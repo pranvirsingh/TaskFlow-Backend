@@ -2,17 +2,18 @@
 {
     public class LoginRequestDto
     {
-        public string UserName { get; set; }
-        public string Password { get; set; }
+        public string username { get; set; }
+        public string password { get; set; }
     }
 
     public class LoginResponseDto
     {
-        public string Token { get; set; }
-        public string UserName { get; set; }
-        public int StatusCode { get; set; }
-        public string Message { get; set; }
-        public string UserType { get; set; }  // 1: Admin, 2: Regular User
+        public string token { get; set; }
+        public string username { get; set; }
+        public string fullname { get; set; }
+        public int statusCode { get; set; }
+        public string message { get; set; }
+        public int usertype { get; set; }  // 1: Admin, 2: Regular User
 
     }
 
