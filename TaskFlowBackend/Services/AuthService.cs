@@ -73,5 +73,11 @@ namespace TaskFlowBackend.Services
             return userDetails;
 
         }
+
+        public async Task<bool> UpdateProfile(int userId, UpdateProfileDto dto)
+        {
+            return await _repo.UpdateProfileAsync(userId, dto);
+        }
+
     }
 }

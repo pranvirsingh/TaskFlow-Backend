@@ -39,7 +39,7 @@ namespace TaskFlowBackend.Repositories
         {
             try
             {
-                return await _context.Users.FirstOrDefaultAsync(x => x.Id == Convert.ToInt32(userId));
+                return await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
             }
             catch (Exception ex)
             {
@@ -47,6 +47,32 @@ namespace TaskFlowBackend.Repositories
                 return null;
             }
         }
+
+        public async Task<bool> UpdateProfileAsync(int userId, UpdateProfileDto dto)
+        {
+            try
+            {
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(x => x.Id == userId && !x.IsDeleted);
+
+                if (user == null)
+                    return false;
+
+                user.FullName = dto.FullName;
+                user.Email = dto.Email;
+                user.Mobile = dto.Mobile;
+                user.UpdatedAt = DateTime.UtcNow;
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating profile");
+                return false;
+            }
+        }
+
 
     }
 }

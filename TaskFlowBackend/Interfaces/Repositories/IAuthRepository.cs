@@ -7,6 +7,6 @@ namespace TaskFlowBackend.Interfaces.Repositories
     {
         public Task<User?> GetUserAsync(LoginRequestDto query);
         public Task<User?> GetUserDetailsByIdAsync(int userId);
-
+        public Task<bool> UpdateProfileAsync(int userId, UpdateProfileDto dto);
     }
 }

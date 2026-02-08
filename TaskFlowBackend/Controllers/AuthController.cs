@@ -51,6 +51,7 @@ namespace TaskFlowBackend.Controllers
             }
             var result = await _auth.GetUserDetailsById(Convert.ToInt32(userId));
             //return Ok(new { result });
+            //Thread.Sleep(5000);
             return Ok(new ResponseResult<object>(
                 200,
                 "Records fetched successfully",
@@ -58,5 +59,39 @@ namespace TaskFlowBackend.Controllers
             ));
 
         }
+
+        [Authorize]
+        [HttpPut("updateProfile")]
+        public async Task<IActionResult> UpdateProfile(UpdateProfileDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return StatusCode(401, new ResponseResult<object>(
+                    401,
+                    "Invalid credentials",
+                    null
+                ));
+            }
+
+            var result = await _auth.UpdateProfile(Convert.ToInt32(userId), dto);
+
+            if (!result)
+            {
+                return Ok(new ResponseResult<object>(
+                    400,
+                    "Failed to update profile",
+                    null
+                ));
+            }
+
+            return Ok(new ResponseResult<object>(
+                200,
+                "Profile updated successfully",
+                null
+            ));
+        }
+
     }
 }
