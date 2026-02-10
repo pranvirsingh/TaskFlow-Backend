@@ -21,6 +21,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
+builder.Services.AddScoped<IMemberService, MemberService>();
+builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+
+
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 
 builder.Services.AddAuthentication(options =>
