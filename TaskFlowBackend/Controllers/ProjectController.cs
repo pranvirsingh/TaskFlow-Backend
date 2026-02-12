@@ -7,23 +7,23 @@ using TaskFlowBackend.Interfaces.Services;
 
 namespace TaskFlowBackend.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
-
-    public class MemberController : ControllerBase
+    public class ProjectController : ControllerBase
     {
-        private readonly IMemberService _auth;
-        public MemberController(IMemberService auth)
+        private readonly IProjectService _project;
+
+        public ProjectController(IProjectService project)
         {
-            _auth = auth;
+            _project = project;
         }
 
+        [Authorize]
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllProjects()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //Thread.Sleep(5000);
+
             if (userId == null)
             {
                 return StatusCode(401, new ResponseResult<object>(
@@ -33,18 +33,17 @@ namespace TaskFlowBackend.Controllers
                 ));
             }
 
-            var result = await _auth.GetAllUsers();
+            var result = await _project.GetAllProjects();
 
             if (result == null || result.Count == 0)
             {
                 return Ok(new ResponseResult<object>(
-                200,
-                "No Records Found",
-                null
-            ));
-
-
+                    200,
+                    "No Records Found",
+                    null
+                ));
             }
+
             return Ok(new ResponseResult<object>(
                 200,
                 "Records fetched successfully",
@@ -52,8 +51,9 @@ namespace TaskFlowBackend.Controllers
             ));
         }
 
+        [Authorize]
         [HttpGet("GetById")]
-        public async Task<IActionResult> GetUsersById([FromQuery] GetUserById _request)
+        public async Task<IActionResult> GetProjectById([FromQuery] GetProjectByIdDto request)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -66,7 +66,7 @@ namespace TaskFlowBackend.Controllers
                 ));
             }
 
-            var result = await _auth.GetUserById(_request);
+            var result = await _project.GetProjectById(request);
 
             if (result == null)
             {
@@ -84,8 +84,9 @@ namespace TaskFlowBackend.Controllers
             ));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("Add")]
-        public async Task<IActionResult> AddUser([FromBody] AddUserDto dto)
+        public async Task<IActionResult> AddProject([FromBody] AddProjectDto dto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -98,26 +99,27 @@ namespace TaskFlowBackend.Controllers
                 ));
             }
 
-            var result = await _auth.AddUser(dto);
+            var result = await _project.AddProject(dto);
 
             if (!result)
             {
                 return Ok(new ResponseResult<object>(
                     400,
-                    "Failed to add user",
+                    "Failed to add project",
                     null
                 ));
             }
 
             return Ok(new ResponseResult<object>(
                 200,
-                "User added successfully",
+                "Project added successfully",
                 null
             ));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto dto)
+        public async Task<IActionResult> UpdateProject([FromBody] UpdateProjectDto dto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -130,26 +132,27 @@ namespace TaskFlowBackend.Controllers
                 ));
             }
 
-            var result = await _auth.UpdateUser(dto);
+            var result = await _project.UpdateProject(dto);
 
             if (!result)
             {
                 return Ok(new ResponseResult<object>(
                     400,
-                    "Failed to Update User",
+                    "Failed to Update Project",
                     null
                 ));
             }
 
             return Ok(new ResponseResult<object>(
                 200,
-                "User updated successfully",
+                "Project updated successfully",
                 null
             ));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteProject(int id)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -162,23 +165,22 @@ namespace TaskFlowBackend.Controllers
                 ));
             }
 
-            var result = await _auth.DeleteUser(id);
+            var result = await _project.DeleteProject(id);
 
             if (!result)
             {
                 return Ok(new ResponseResult<object>(
                     400,
-                    "Failed to Delete User",
+                    "Failed to Delete Project",
                     null
                 ));
             }
 
             return Ok(new ResponseResult<object>(
                 200,
-                "User deleted successfully",
+                "Project deleted successfully",
                 null
             ));
         }
-
     }
 }

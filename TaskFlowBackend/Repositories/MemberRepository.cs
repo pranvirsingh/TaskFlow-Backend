@@ -21,7 +21,7 @@ namespace TaskFlowBackend.Repositories
         {
             try
             {
-                return await _context.Users.Where(x => x.Id != 1 && !x.IsDeleted).ToListAsync();
+                return await _context.Users.Where(x => x.Id != 1 && !x.IsDeleted).OrderByDescending(x => x.Id).ToListAsync();
             }
             catch (Exception ex)
             {
