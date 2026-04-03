@@ -98,7 +98,7 @@ namespace TaskFlowBackend.Controllers
                     null
                 ));
             }
-
+            dto.CreatedBy = Convert.ToInt32(userId);
             var result = await _project.AddProject(dto);
 
             if (!result)
