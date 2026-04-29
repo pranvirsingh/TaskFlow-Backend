@@ -1,4 +1,4 @@
-﻿using TaskFlowBackend.Dtos;
+using TaskFlowBackend.Dtos;
 using TaskFlowBackend.Models;
 
 namespace TaskFlowBackend.Interfaces.Repositories
@@ -10,6 +10,7 @@ namespace TaskFlowBackend.Interfaces.Repositories
         Task<bool> AddUserAsync(AddUserDto dto);
         Task<bool> UpdateUserAsync(UpdateUserDto dto);
         Task<bool> DeleteUserAsync(int id);
+        Task<bool> AssignRoleAsync(int userId, int roleId);
 
     }
 }

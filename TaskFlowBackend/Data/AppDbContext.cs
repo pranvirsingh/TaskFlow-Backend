@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TaskFlowBackend.Models;
 
 namespace TaskFlowBackend.Data
@@ -11,9 +11,22 @@ namespace TaskFlowBackend.Data
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.Property(e => e.CreatedAt)
+                      .HasDefaultValueSql("NOW()");
+            });
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Role)
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.RoleId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.IsActive)

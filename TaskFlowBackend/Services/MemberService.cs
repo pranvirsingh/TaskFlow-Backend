@@ -1,4 +1,4 @@
-﻿using TaskFlowBackend.Dtos;
+using TaskFlowBackend.Dtos;
 using TaskFlowBackend.Interfaces.Repositories;
 using TaskFlowBackend.Interfaces.Services;
 using TaskFlowBackend.Models;
@@ -38,6 +38,11 @@ namespace TaskFlowBackend.Services
         public async Task<bool> DeleteUser(int id)
         {
             return await _repo.DeleteUserAsync(id);
+        }
+
+        public async Task<bool> AssignRoleAsync(int userId, int roleId)
+        {
+            return await _repo.AssignRoleAsync(userId, roleId);
         }
 
     }

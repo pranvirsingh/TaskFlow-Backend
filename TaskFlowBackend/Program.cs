@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TaskFlowBackend.Data;
+using TaskFlowBackend.Interfaces;
 using TaskFlowBackend.Interfaces.Repositories;
 using TaskFlowBackend.Interfaces.Services;
 using TaskFlowBackend.Repositories;
@@ -27,6 +28,8 @@ builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 

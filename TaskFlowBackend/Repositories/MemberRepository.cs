@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TaskFlowBackend.Data;
 using TaskFlowBackend.Dtos;
 using TaskFlowBackend.Interfaces.Repositories;
@@ -133,6 +133,29 @@ namespace TaskFlowBackend.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error While Deleting User");
+                return false;
+            }
+        }
+
+        public async Task<bool> AssignRoleAsync(int userId, int roleId)
+        {
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId && !u.IsDeleted);
+                if (user == null) return false;
+
+                var roleExists = await _context.Roles.AnyAsync(r => r.Id == roleId);
+                if (!roleExists) return false;
+
+                user.RoleId = roleId;
+                user.UpdatedAt = DateTime.UtcNow;
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error While Assigning Role");
                 return false;
             }
         }

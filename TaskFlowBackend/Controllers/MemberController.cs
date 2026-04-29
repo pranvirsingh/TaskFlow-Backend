@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskFlowBackend.Common;
@@ -176,6 +176,38 @@ namespace TaskFlowBackend.Controllers
             return Ok(new ResponseResult<object>(
                 200,
                 "User deleted successfully",
+                null
+            ));
+        }
+
+        [HttpPut("{userId}/role")]
+        public async Task<IActionResult> AssignRole(int userId, [FromBody] AssignRoleDto dto)
+        {
+            var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (adminId == null)
+            {
+                return StatusCode(401, new ResponseResult<object>(
+                    401,
+                    "Invalid credentials",
+                    null
+                ));
+            }
+
+            var result = await _auth.AssignRoleAsync(userId, dto.RoleId);
+
+            if (!result)
+            {
+                return Ok(new ResponseResult<object>(
+                    400,
+                    "Failed to assign role. Ensure user and role exist.",
+                    null
+                ));
+            }
+
+            return Ok(new ResponseResult<object>(
+                200,
+                "Role assigned successfully",
                 null
             ));
         }
